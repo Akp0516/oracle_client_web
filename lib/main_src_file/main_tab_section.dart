@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:oracle_solutions_project/main_src_file/service_area.dart';
+
 import '../Constants.dart';
 import 'contact_area.dart';
 import 'expertise_area.dart';
 import 'introduction_area.dart';
+import 'main_page_header.dart';
 
 class OracleSolutionsPage extends StatefulWidget {
   const OracleSolutionsPage({super.key});
@@ -63,114 +65,32 @@ class OracleSolutionsPageState extends State<OracleSolutionsPage>
   Widget _buildSection(GlobalKey key, Widget content) {
     return Container(
       key: key,
-      padding: const EdgeInsets.symmetric(horizontal: 0),
+      padding: const EdgeInsets.symmetric(horizontal: .0),
       child: content,
-    );
-  }
-
-  Widget _buildHeader(bool isWeb) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-      decoration: BoxDecoration(
-        color: Colors.transparent,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
-            spreadRadius: 1,
-            blurRadius: 5,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          // Logo Section
-          Row(
-            children: [
-              Image.asset(
-                'assets/images/logo.png',
-                height: 40,
-              ),
-              const SizedBox(width: 10),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Oracle Solutions',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFF2B2B2B),
-                    ),
-                  ),
-                  if (isWeb)
-                    const Text(
-                      'Think Bigger Sell Smarter',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Color(0xFF666666),
-                        fontStyle: FontStyle.italic,
-                      ),
-                    ),
-                ],
-              ),
-            ],
-          ),
-
-          // Navigation Tabs
-          if (isWeb)
-            TabBar(
-              controller: _tabController,
-              isScrollable: true,
-              labelColor: ColorTheme.navBarColor,
-              unselectedLabelColor: const Color(0xFF666666),
-              labelStyle: headingText.copyWith(fontSize: 16),
-              unselectedLabelStyle: normalText,
-              indicatorColor: ColorTheme.navBarColor,
-              tabs: const [
-                Tab(text: 'Home'),
-                Tab(text: 'Services'),
-                Tab(text: 'Why Choose Us'),
-                Tab(text: 'Contact'),
-              ],
-            ),
-        ],
-      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    bool isWeb = MediaQuery.of(context).size.width > 768;
-
+    bool _isWeb = isWeb(context);
     return Scaffold(
-      backgroundColor: Colors.transparent,
-      appBar: isWeb
-          ? PreferredSize(
-              preferredSize: const Size.fromHeight(80),
-              child: _buildHeader(isWeb),
-            )
-          : AppBar(
-              backgroundColor: Colors.transparent,
-              centerTitle: true,
-              title: Image.asset(
-                'assets/images/logo.png',
-                height: 40,
-              ),
-              bottom: TabBar(
-                controller: _tabController,
-                unselectedLabelStyle: normalText.copyWith(fontSize: 13),
-                labelStyle: headingText.copyWith(
-                    fontSize: 16, color: ColorTheme.navBarColor),
-                tabs: const [
-                  Tab(text: 'Home'),
-                  Tab(text: 'Services'),
-                  Tab(text: 'Why\nChoose Us'),
-                  Tab(text: 'Contact'),
-                ],
-              ),
-            ),
+      appBar: AppBar(
+        title: const MainPageHeader(),
+        centerTitle: true,
+        bottom: TabBar(
+          unselectedLabelStyle:
+              _isWeb ? normalText : normalText.copyWith(fontSize: 13),
+          labelStyle: headingText.copyWith(
+              fontSize: _isWeb ? 20 : 16, color: ColorTheme.navBarColor),
+          controller: _tabController,
+          tabs: [
+            const Tab(text: 'Home'),
+            const Tab(text: 'Services'),
+            Tab(text: _isWeb ? 'Why Choose Us' : 'Why \nChoose Us'),
+            const Tab(text: 'Contact'),
+          ],
+        ),
+      ),
       body: SingleChildScrollView(
         controller: _scrollController,
         child: Column(
